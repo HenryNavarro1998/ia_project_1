@@ -3,7 +3,7 @@ from piece import Piece
 from settings import WIDTH, HEIGTH, WHITE, BLACK, RED, BLUE
 import pygame
 import random
-import copy
+from minimax import minimax
 
 def validate_direction(func):
     def wrapper(self, pos_x, pos_y):
@@ -93,6 +93,20 @@ class Table:
         return True
 
 
+    def get_board(self):
+        board = [[None for _ in range(4)] for _ in range(4)]
+
+        for r in range(4):
+            for c in range(4):
+                if self.board[r][c]:
+                    board[r][c] = self.board[r][c].player
+                    if self.board[r][c].is_queen:
+                        board[r][c] = board[r][c].upper()
+
+        return board
+
+
+
     def move(self, x, y):
         piece_x = self.piece.x
         piece_y = self.piece.y
@@ -137,106 +151,24 @@ class Table:
                 if self._is_single_move(pos_x, pos_y):
                     self.move(pos_x, pos_y)
                     self.turn = "x" if self.turn == "o" else "o"
-                    e, p, m = minimax(self, 5)
+                    e, m = minimax(self.get_board(), 3, float("-inf"), float("inf"), True)
+                    piece, move = m[0], m[1]
+                    self.handle_click(piece[1] * 100, piece[0] * 100)
+                    self.handle_click(move[1] * 100, move[0] * 100)
+
 
                 if self._is_capture_move(pos_x, pos_y):
                     self.capture(pos_x,pos_y)
                     self.move(pos_x, pos_y)
                     self.turn = "x" if self.turn == "o" else "o"
-                    e, p, m = minimax(self, 5)
-
+                    e, m = minimax(self.get_board(), 3, float("-inf"), float("inf"), True)
+                    piece, move = m[0], m[1]
+                    self.handle_click(piece[1] * 100, piece[0] * 100)
+                    self.handle_click(move[1] * 100, move[0] * 100)
 
 
     def check_win(self):
         red_count = sum(r.count(Piece("o")) for r in self.board)
         blue_count = sum(r.count(Piece("x")) for r in self.board)
         return 0 in [red_count, blue_count]
-
-
-    def evaluate_board(self, to_eval=None):
-        if  not to_eval:
-            to_eval = self
-        red_count = sum(r.count(Piece("o")) for r in to_eval.board)
-        blue_count = sum(r.count(Piece("x")) for r in to_eval.board)
-        return red_count - blue_count, None, None
-
-
-    def get_pieces(self, board, player):
-        return [
-            piece for r in board for piece in r
-            if piece and piece.player == player
-        ]
-
-
-    def get_valid_moves(self, piece):
-        MOVES = [(-1,-1), (-1,1), (1,-1), (1,1), (-2,-2), (-2,2), (2,-2), (2,2)]
-        valid_moves = []
-
-        for move in MOVES:
-
-            if (piece.x + move[0]) < 0 or (piece.x + move[0]) >= 4 or (piece.y + move[1]) < 0 or (piece.y + move[1]) >= 4:
-                continue
-
-            if not piece.is_queen:
-                if piece.player == "x":
-                    if (piece.x + move[0]) >= piece.x:
-                        continue
-                elif piece.player == "o":
-                    if (piece.x + move[0]) <= piece.x:
-                        continue
-            valid_moves.append(move)
-        return valid_moves
-
-def minimax(board, depth, alpha=float("-inf"), beta=float("inf"), max_player=True):
-        if depth == 0 or board.check_win():
-            return board.evaluate_board(board)
-
-        new_board = Table()
-        new_board.board = board.board
-        new_board.turn = board.turn
-        new_board.piece = board.piece
-
-        best_move = None
-        piece_to_move = None
-        if max_player:
-            max_eval = float("-inf")
-            pieces = board.get_pieces(board.board, "o")
-            for piece in pieces:
-                for move in board.get_valid_moves(piece):
-                    board.handle_click(piece.y * 100, piece.x * 100)
-                    board.handle_click((piece.y + move[0]) * 100, (piece.x + move[1]) * 100)
-
-                    e, _p, _m = minimax(new_board, depth-1, alpha, beta, False)
-
-                    if e > max_eval:
-                        max_eval = e
-                        piece_to_move = piece
-                        best_move = move
-                    alpha = max(alpha, e)
-
-                    if beta <= alpha:
-                        break
-            return max_player, piece_to_move, best_move
-        else:
-            min_eval = float("inf")
-            pieces = board.get_pieces(board.board, "x")
-            for piece in pieces:
-                for move in board.get_valid_moves(piece):
-                    board.handle_click(piece.y * 100, piece.x * 100)
-                    board.handle_click((piece.y + move[0]) * 100, (piece.x + move[1]) * 100)
-
-                    e, _p, _m = minimax(new_board, depth-1, alpha, beta, True)
-
-                    if e < min_eval:
-                        min_eval = e
-                        piece_to_move = piece
-                        best_move = move
-                    alpha = min(alpha, e)
-
-                    if beta <= alpha:
-                        break
-            return min_eval, piece_to_move, best_move
-
-
-
 

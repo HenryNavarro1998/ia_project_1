@@ -2,6 +2,7 @@ import pygame
 from table import Table
 from settings import WIDTH, HEIGTH, WHITE, BLACK
 
+
 pygame.init()
 display = pygame.display.set_mode((WIDTH, HEIGTH))
 table = Table()
