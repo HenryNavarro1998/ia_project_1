@@ -5,6 +5,7 @@ import pygame
 import random
 from minimax import minimax
 
+
 def validate_direction(func):
     def wrapper(self, pos_x, pos_y):
         # Verificar si la pieza existe
@@ -41,8 +42,8 @@ class Table:
         self.board = self.init_board()
         # display = pygame.display.set_mode((WIDTH, HEIGTH))
         self.piece = None
-        # self.turn = random.choice(["x","o"])
         self.turn = "x"
+        self.turns_played = 0
 
 
     def init_board(self):
@@ -119,7 +120,6 @@ class Table:
             self.piece.player, self.piece.color, x, y, self.piece.is_queen
         )
 
-
         self.piece = None
         return
 
@@ -151,20 +151,24 @@ class Table:
                 if self._is_single_move(pos_x, pos_y):
                     self.move(pos_x, pos_y)
                     self.turn = "x" if self.turn == "o" else "o"
-                    e, m = minimax(self.get_board(), 3, float("-inf"), float("inf"), True)
-                    piece, move = m[0], m[1]
-                    self.handle_click(piece[1] * 100, piece[0] * 100)
-                    self.handle_click(move[1] * 100, move[0] * 100)
+                    if self.turn == "o":
+                        e, m = minimax(self.get_board(), 3, float("-inf"), float("inf"), True)
+                        piece, move = m[0], m[1]
+                        self.handle_click(piece[1] * 100, piece[0] * 100)
+                        self.handle_click(move[1] * 100, move[0] * 100)
 
 
                 if self._is_capture_move(pos_x, pos_y):
                     self.capture(pos_x,pos_y)
                     self.move(pos_x, pos_y)
                     self.turn = "x" if self.turn == "o" else "o"
-                    e, m = minimax(self.get_board(), 3, float("-inf"), float("inf"), True)
-                    piece, move = m[0], m[1]
-                    self.handle_click(piece[1] * 100, piece[0] * 100)
-                    self.handle_click(move[1] * 100, move[0] * 100)
+                    if self.turn == "o":
+                        e, m = minimax(self.get_board(), 3, float("-inf"), float("inf"), True)
+                        piece, move = m[0], m[1]
+                        self.handle_click(piece[1] * 100, piece[0] * 100)
+                        self.handle_click(move[1] * 100, move[0] * 100)
+
+                self.turns_played += .5
 
 
     def check_win(self):

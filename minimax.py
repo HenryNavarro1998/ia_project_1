@@ -1,6 +1,6 @@
 def evaluate_board(board):
-    red_count = sum(row.count("o") for row in board) + sum(row.count("O") for row in board)
-    blue_count = sum(row.count("x") for row in board) + sum(row.count("X") for row in board)
+    red_count = sum(row.count("o") for row in board) + (sum(row.count("O") for row in board) * 2)
+    blue_count = sum(row.count("x") for row in board) + (sum(row.count("X") for row in board) * 2)
     return red_count - blue_count
 
 
