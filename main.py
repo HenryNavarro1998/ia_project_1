@@ -53,7 +53,9 @@ while not running and turns_played < 64:
                 selected_piece = (click_x, click_y)  # Seleccionar pieza
 
     # Turno de la IA
-    if turn == "o":
+    running, _ = is_game_over(board)
+
+    if turn == "o" and not running:
         board = do_minimax_move(board)
         turn = "x"
 
@@ -62,4 +64,3 @@ while not running and turns_played < 64:
     turns = font.render("Turnos Jugados: %s" %(turns_played), True, GREEN)
     screen.blit(turns, (10, 10))
     pygame.display.flip()
-    running, _ = is_game_over(board)
