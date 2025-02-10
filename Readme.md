@@ -2,7 +2,7 @@
 
 Un juego de damas simplificado en un tablero 4x4, donde compites contra una IA que utiliza el algoritmo Minimax con poda alfa-beta para optimizar sus movimientos. Proyecto diseñado para evaluar la eficacia de un agente basado en conocimientos.
 
-![Captura del juego](![alt text](image.png))
+(![alt text](image.png))
 
 ## Características
 - Tablero 4x4 con configuración inicial simplificada.
@@ -19,8 +19,8 @@ Un juego de damas simplificado en un tablero 4x4, donde compites contra una IA q
 ## Instalación
 1. Clona el repositorio:
    ```bash
-   git clone https://github.com/tu-usuario/damas-4x4-minimax.git
-   cd damas-4x4-minimax
+   git clone git@github.com:HenryNavarro1998/ia_project_1.git
+   cd ia_project_1
    ```
 
 2. Instala las dependencias:
