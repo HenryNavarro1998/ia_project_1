@@ -2,7 +2,7 @@
 
 Un juego de damas simplificado en un tablero 4x4, donde compites contra una IA que utiliza el algoritmo Minimax con poda alfa-beta para optimizar sus movimientos. Proyecto diseñado para evaluar la eficacia de un agente basado en conocimientos.
 
-(![alt text](image.png))
+![alt text](image.png)
 
 ## Características
 - Tablero 4x4 con configuración inicial simplificada.
